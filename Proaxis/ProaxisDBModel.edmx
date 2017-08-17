@@ -1,0 +1,196 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="ProaxisDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="employee">
+          <Key>
+            <PropertyRef Name="badgeID" />
+          </Key>
+          <Property Name="lastName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="firstName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="employeeID" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="badgeID" Type="varchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="item">
+          <Key>
+            <PropertyRef Name="itemID" />
+          </Key>
+          <Property Name="itemID" Type="int" Nullable="false" />
+          <Property Name="itemDescription" Type="varchar(max)" Nullable="false" />
+          <Property Name="itemPrice" Type="decimal" Precision="20" Scale="2" Nullable="false" />
+          <Property Name="itemStock" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="order">
+          <Key>
+            <PropertyRef Name="orderID" />
+          </Key>
+          <Property Name="orderID" Type="int" Nullable="false" />
+          <Property Name="badgeID" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="orderTotal" Type="decimal" Precision="20" Scale="2" Nullable="false" />
+          <Property Name="orderTimestamp" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="test">
+          <Key>
+            <PropertyRef Name="testID" />
+          </Key>
+          <Property Name="testID" Type="int" Nullable="false" />
+          <Property Name="testName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="testPrice" Type="money" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_order_employee">
+          <End Role="employee" Type="Self.employee" Multiplicity="1" />
+          <End Role="order" Type="Self.order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="employee">
+              <PropertyRef Name="badgeID" />
+            </Principal>
+            <Dependent Role="order">
+              <PropertyRef Name="badgeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ProaxisDBModelStoreContainer">
+          <EntitySet Name="employee" EntityType="Self.employee" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="item" EntityType="Self.item" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="order" EntityType="Self.order" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="test" EntityType="Self.test" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_order_employee" Association="Self.FK_order_employee">
+            <End Role="employee" EntitySet="employee" />
+            <End Role="order" EntitySet="order" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ProaxisDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="employee">
+          <Key>
+            <PropertyRef Name="badgeID" />
+          </Key>
+          <Property Name="lastName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="firstName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="employeeID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="badgeID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="orders" Relationship="ProaxisDBModel.FK_order_employee" FromRole="employee" ToRole="order" />
+        </EntityType>
+        <EntityType Name="item">
+          <Key>
+            <PropertyRef Name="itemID" />
+          </Key>
+          <Property Name="itemID" Type="Int32" Nullable="false" />
+          <Property Name="itemDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="itemPrice" Type="Decimal" Precision="20" Scale="2" Nullable="false" />
+          <Property Name="itemStock" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="order">
+          <Key>
+            <PropertyRef Name="orderID" />
+          </Key>
+          <Property Name="orderID" Type="Int32" Nullable="false" />
+          <Property Name="badgeID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="orderTotal" Type="Decimal" Precision="20" Scale="2" Nullable="false" />
+          <Property Name="orderTimestamp" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="employee" Relationship="ProaxisDBModel.FK_order_employee" FromRole="order" ToRole="employee" />
+        </EntityType>
+        <EntityType Name="test">
+          <Key>
+            <PropertyRef Name="testID" />
+          </Key>
+          <Property Name="testID" Type="Int32" Nullable="false" />
+          <Property Name="testName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="testPrice" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+        </EntityType>
+        <EntityContainer Name="ProaxisDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="employees" EntityType="Self.employee" />
+          <EntitySet Name="items" EntityType="Self.item" />
+          <EntitySet Name="orders" EntityType="Self.order" />
+          <EntitySet Name="tests" EntityType="Self.test" />
+          <AssociationSet Name="FK_order_employee" Association="ProaxisDBModel.FK_order_employee">
+            <End Role="employee" EntitySet="employees" />
+            <End Role="order" EntitySet="orders" />
+          </AssociationSet>
+        </EntityContainer>
+        <Association Name="FK_order_employee">
+          <End Type="ProaxisDBModel.employee" Role="employee" Multiplicity="1" />
+          <End Type="ProaxisDBModel.order" Role="order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="employee">
+              <PropertyRef Name="badgeID" />
+            </Principal>
+            <Dependent Role="order">
+              <PropertyRef Name="badgeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ProaxisDBModelStoreContainer" CdmEntityContainer="ProaxisDBEntities">
+          <EntitySetMapping Name="employees">
+            <EntityTypeMapping TypeName="ProaxisDBModel.employee">
+              <MappingFragment StoreEntitySet="employee">
+                <ScalarProperty Name="lastName" ColumnName="lastName" />
+                <ScalarProperty Name="firstName" ColumnName="firstName" />
+                <ScalarProperty Name="employeeID" ColumnName="employeeID" />
+                <ScalarProperty Name="badgeID" ColumnName="badgeID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="items">
+            <EntityTypeMapping TypeName="ProaxisDBModel.item">
+              <MappingFragment StoreEntitySet="item">
+                <ScalarProperty Name="itemID" ColumnName="itemID" />
+                <ScalarProperty Name="itemDescription" ColumnName="itemDescription" />
+                <ScalarProperty Name="itemPrice" ColumnName="itemPrice" />
+                <ScalarProperty Name="itemStock" ColumnName="itemStock" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="orders">
+            <EntityTypeMapping TypeName="ProaxisDBModel.order">
+              <MappingFragment StoreEntitySet="order">
+                <ScalarProperty Name="orderID" ColumnName="orderID" />
+                <ScalarProperty Name="badgeID" ColumnName="badgeID" />
+                <ScalarProperty Name="orderTotal" ColumnName="orderTotal" />
+                <ScalarProperty Name="orderTimestamp" ColumnName="orderTimestamp" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tests">
+            <EntityTypeMapping TypeName="ProaxisDBModel.test">
+              <MappingFragment StoreEntitySet="test">
+                <ScalarProperty Name="testID" ColumnName="testID" />
+                <ScalarProperty Name="testName" ColumnName="testName" />
+                <ScalarProperty Name="testPrice" ColumnName="testPrice" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
